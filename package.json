@@ -2,9 +2,9 @@
   "name": "rest-api-checkpoint",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon app"
+    "start": "nodemon server"
   },
   "keywords": [],
   "author": "",
