@@ -22,41 +22,41 @@ app.get("/users", async (req, res) => {
 
 //POST user
 app.post("/users", async (req, res) => {
-  if (!req.body.text) {
+  if (!req.body.name || !req.body.email) {
     res.status(400);
-    throw new Error("Please add a user");
+    throw new Error("Name && email field required!");
   }
 
-  const user = await User.create();
+  const user = await User.create({
+    name: req.body.name,
+    age: req.body.age,
+    email: req.body.email,
+  });
   res.status(200).json(user);
 });
 
 //UPDATE user
 app.put("/users/:id", async (req, res) => {
-  if (!req.body.text) {
-    res.status(400);
-    throw new Error("Please add a user");
-  }
   const user = await User.findById(req.params.id);
   if (!user) {
+    res.status(400);
     throw new Error("Couldn't find user");
   }
-  const available = await User.findByIdAndUpdate(req.params.id);
-  res.status(200).json(available);
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(200).json(updatedUser);
 });
 
 //DELETE user
 app.delete("/users/:id", async (req, res) => {
-  if (!req.body.text) {
-    res.status(400);
-    throw new Error("Please add a user");
-  }
   const user = await User.findById(req.params.id);
   if (!user) {
+    res.status(400);
     throw new Error("Couldn't find user");
   }
-  const deleted = await User.findByIdAndDelete(req.params.id);
-  res.status(200).json(deleted);
+  await user.remove();
+  res.status(200).json({ message: "Removed successfully!" });
 });
 
 app.listen(port, () => {
